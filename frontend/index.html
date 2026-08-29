@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Larvi | Autonomous Email & Calendar AI Agent</title>
+  <link rel="stylesheet" href="/static/style.css?v=2.1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Top Bar Navigation & System Status -->
+    <header class="app-header">
+      <div class="logo-area">
+        <div class="logo-icon">🤖</div>
+        <div class="logo-text">
+          <h1>Larvi <span class="badge">Master Agent</span></h1>
+          <p>Autonomous Email & Calendar AI Orchestrator</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="status-indicator">
+          <span class="pulse-dot"></span>
+          <span id="system-status">System Active</span>
+        </div>
+        
+        <div class="toggle-group">
+          <label for="mock-toggle" class="toggle-label">Mode:</label>
+          <select id="mock-toggle" class="mode-select">
+            <option value="true" selected>⚡ Sandbox Mode (Mock Data)</option>
+            <option value="false">🔒 Real Google OAuth API</option>
+          </select>
+        </div>
+
+        <button id="google-auth-btn" class="btn btn-primary hidden" title="Connect your Google Account">🔑 Connect Google Account</button>
+        <button id="reset-btn" class="btn btn-secondary" title="Reset Sandbox State">🔄 Reset Sandbox</button>
+      </div>
+    </header>
+
+    <!-- Main Dashboard Grid Layout -->
+    <main class="dashboard-layout">
+      
+      <!-- LEFT SIDEBAR: Agent Thought & Graph Stream -->
+      <aside class="panel sidebar-left">
+        <div class="panel-header">
+          <h2>🧠 Agent Graph & Thoughts</h2>
+          <span class="sub-badge" id="active-agent-badge">Larvi Idle</span>
+        </div>
+
+        <!-- Live Graph Execution Visualizer -->
+        <div class="agent-graph-box">
+          <div class="graph-node master" id="node-master">
+            <div class="node-icon">🧠</div>
+            <div class="node-info">
+              <strong>Larvi Master Agent</strong>
+              <small>Intent & Workflow Orchestrator</small>
+            </div>
+          </div>
+          
+          <div class="graph-connector"></div>
+          
+          <div class="graph-branches">
+            <div class="graph-node sub-node" id="node-email">
+              <div class="node-icon">✉️</div>
+              <div class="node-info">
+                <strong>Email Agent</strong>
+                <small>Gmail API & Threads</small>
+              </div>
+            </div>
+            <div class="graph-node sub-node" id="node-calendar">
+              <div class="node-icon">📅</div>
+              <div class="node-info">
+                <strong>Calendar Agent</strong>
+                <small>GCal Free/Busy & Booking</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step-by-Step Thought Log -->
+        <div class="steps-container" id="steps-container">
+          <div class="placeholder-text">Execute a request to view agent workflow execution graph and thought steps...</div>
+        </div>
+      </aside>
+
+      <!-- CENTER EXTENDED COLUMN: Larvi Command Center & HITL Safety Guard -->
+      <section class="panel center-column">
+        <div class="panel-header">
+          <h2>💬 Larvi Command Center</h2>
+          <span class="sub-badge">Real-Time NLP Orchestration</span>
+        </div>
+
+        <!-- In-Line Human-in-the-Loop (HITL) Safety Guard Banner -->
+        <div id="inline-hitl-banner" class="hitl-banner hidden">
+          <div class="hitl-header">
+            <div class="hitl-icon">🛡️</div>
+            <div>
+              <h3>Human-in-the-Loop Safety Guard Active</h3>
+              <p>High-stakes action paused awaiting user authorization</p>
+            </div>
+          </div>
+          <div class="hitl-body">
+            <div class="hitl-row">
+              <strong>Action:</strong> <span id="banner-action-type" class="hitl-tag">create_calendar_event</span>
+              <strong>Agent:</strong> <span id="banner-agent-role" class="hitl-tag">Calendar Agent</span>
+            </div>
+            <p id="banner-description" class="hitl-desc"></p>
+            <div class="hitl-preview-box">
+              <pre id="banner-details-json"></pre>
+            </div>
+          </div>
+          <div class="hitl-actions">
+            <button id="banner-reject-btn" class="btn btn-danger">❌ Reject Action</button>
+            <button id="banner-approve-btn" class="btn btn-success">✅ Approve & Execute</button>
+          </div>
+        </div>
+
+        <!-- Chat Output Feed -->
+        <div class="chat-history" id="chat-history">
+          <div class="chat-bubble agent-bubble">
+            <div class="bubble-header">
+              <span class="agent-name">🤖 Larvi Master Agent</span>
+              <span class="time">System Ready</span>
+            </div>
+            <div class="bubble-content">
+              Hello! I am <strong>Larvi</strong>, your autonomous Email and Calendar AI Master Agent. Ask me to scan your emails for meeting requests, check conflicts, schedule Google Calendar events, or draft confirmation emails!
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Action Prompt Chips -->
+        <div class="quick-chips">
+          <button class="chip" data-prompt="Check my recent emails for meeting requests and schedule them on my calendar.">
+            📩 Scan inbox & schedule meeting
+          </button>
+          <button class="chip" data-prompt="Do I have any scheduling conflicts on my calendar tomorrow?">
+            📅 Check calendar conflicts
+          </button>
+          <button class="chip" data-prompt="Check unread emails in my inbox.">
+            ✉️ List unread emails
+          </button>
+        </div>
+
+        <!-- Command Form -->
+        <form id="chat-form" class="chat-input-form">
+          <input type="text" id="user-input" placeholder="Type a request (e.g. 'Scan inbox for meetings and book on calendar')..." required autocomplete="off">
+          <button type="submit" id="send-btn" class="btn btn-primary">Execute 🚀</button>
+        </form>
+      </section>
+
+      <!-- RIGHT SIDEBAR: Inbox & Calendar Events -->
+      <aside class="panel sidebar-right">
+        <div class="feed-tabs">
+          <button class="tab-btn active" data-tab="inbox-tab">📩 Inbox (<span id="inbox-count">0</span>)</button>
+          <button class="tab-btn" data-tab="calendar-tab">📅 Calendar Events</button>
+        </div>
+
+        <div class="tab-content active" id="inbox-tab">
+          <div id="email-list" class="data-list">
+            <div class="loading">Loading inbox data...</div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="calendar-tab">
+          <div id="calendar-list" class="data-list">
+            <div class="loading">Loading calendar events...</div>
+          </div>
+        </div>
+      </aside>
+
+    </main>
+
+    <!-- Centered Human-in-the-Loop Safety Confirmation Modal -->
+    <div id="confirmation-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="warning-icon">🛡️</div>
+          <div>
+            <h3>Human-in-the-Loop Safety Guard</h3>
+            <p>Approval requested for high-stakes operation</p>
+          </div>
+        </div>
+        
+        <div class="modal-body">
+          <div class="conf-field">
+            <label>Action Type:</label>
+            <span id="modal-action-type" class="action-tag">create_calendar_event</span>
+          </div>
+          <div class="conf-field">
+            <label>Responsible Agent:</label>
+            <span id="modal-agent-role" class="agent-tag">Calendar Agent</span>
+          </div>
+          <div class="conf-field">
+            <label>Description:</label>
+            <p id="modal-description" class="desc-text"></p>
+          </div>
+          <div class="conf-details-box">
+            <label>Action Payload Preview:</label>
+            <pre id="modal-details-json"></pre>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="modal-reject-btn" class="btn btn-danger">❌ Reject Action</button>
+          <button id="modal-approve-btn" class="btn btn-success">✅ Approve & Execute Action</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/static/app.js?v=2.1.0"></script>
+</body>
+</html>
