@@ -59,7 +59,7 @@ python -m unittest discover -s tests
    - Payload diff preview window allowing explicit **Approve** or **Reject** authorization before any external modification occurs.
 
      
-**Step-by-Step Guide: Generating Google OAuth Credentials**
+##Step-by-Step Guide: Generating Google OAuth Credentials
 1. **Create or Select a Project**
 Go to the Google Cloud Console.
 
